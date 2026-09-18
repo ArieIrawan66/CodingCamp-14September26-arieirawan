@@ -1249,6 +1249,20 @@
     return months;
   }
 
+  function renderTotalBalance(transactions) {
+    var totalEl = document.getElementById('total-balance-value');
+
+    if (!totalEl) return;
+
+    var total = 0;
+
+    for (var i = 0; i < transactions.length; i++) {
+      total += Number(transactions[i].amount) || 0;
+    }
+
+    totalEl.textContent = formatCurrency(total);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
 
     // --- 1. Load persisted state ---
@@ -1330,6 +1344,8 @@
     RenderModule.renderChart(chartData);
     RenderModule.renderBudgetLimitInputs(allCategories, AppState.budgetLimits);
 
+    renderTotalBalance(AppState.transactions);
+
     // --- 5. Set sort control to current value ---
     var sortSelect = document.getElementById('sort-order');
     if (sortSelect) {
@@ -1375,6 +1391,7 @@
       RenderModule.renderMonthlySummary(summary, categories, AppState.budgetLimits);
       RenderModule.renderChart(chart);
       RenderModule.renderBudgetLimitInputs(categories, AppState.budgetLimits);
+      renderTotalBalance(AppState.transactions);
 
       if (sortSelect) {
         sortSelect.value = AppState.sortOrder;
