@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense &amp; Budget Visualizer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== APP HEADER ===================== -->
+  <header id="app-header">
+    <h1 class="app-title">Expense &amp; Budget Visualizer</h1>
+    <button
+      id="theme-toggle"
+      type="button"
+      class="theme-toggle"
+      aria-label="Toggle dark/light mode"
+    >
+      <span class="theme-toggle__icon" aria-hidden="true">🌙</span>
+      <span class="theme-toggle__label">Dark Mode</span>
+    </button>
+  </header>
+
+  <!-- ===================== NOTIFICATION AREA ===================== -->
+  <div id="notification-area" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <main id="main-content">
+
+    <!-- ===================== TRANSACTION FORM ===================== -->
+    <section id="transaction-form-section" aria-labelledby="transaction-form-heading">
+      <h2 id="transaction-form-heading">Add Transaction</h2>
+      <form id="transaction-form" novalidate>
+
+        <!-- Name field -->
+        <div class="form-field">
+          <label for="txn-name">Name</label>
+          <input
+            type="text"
+            id="txn-name"
+            name="name"
+            placeholder="e.g. Lunch, Bus fare"
+            maxlength="100"
+            autocomplete="off"
+          />
+          <span id="txn-name-error" class="field-error" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Amount field -->
+        <div class="form-field">
+          <label for="txn-amount">Amount</label>
+          <input
+            type="number"
+            id="txn-amount"
+            name="amount"
+            placeholder="0.00"
+            min="0.01"
+            max="999999999.99"
+            step="0.01"
+          />
+          <span id="txn-amount-error" class="field-error" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Date field -->
+        <div class="form-field">
+          <label for="txn-date">Date</label>
+          <input
+            type="date"
+            id="txn-date"
+            name="date"
+          />
+          <span id="txn-date-error" class="field-error" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <!-- Category field -->
+        <div class="form-field">
+          <label for="txn-category">Category</label>
+          <select id="txn-category" name="categoryId">
+            <option value="">-- Select a category --</option>
+          </select>
+          <span id="txn-category-error" class="field-error" role="alert" aria-live="assertive"></span>
+        </div>
+
+        <button type="submit" class="btn btn--primary">Add Transaction</button>
+      </form>
+    </section>
+
+    <!-- ===================== TRANSACTION LIST ===================== -->
+    <section id="transaction-list-section" aria-labelledby="transaction-list-heading">
+      <div class="section-header">
+        <h2 id="transaction-list-heading">Transactions</h2>
+
+        <!-- Sort controls -->
+        <div class="sort-controls">
+          <label for="sort-order">Sort by:</label>
+          <select id="sort-order" name="sortOrder">
+            <option value="amountAsc">Amount (Low → High)</option>
+            <option value="amountDesc">Amount (High → Low)</option>
+            <option value="categoryAz">Category (A → Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="transaction-list-wrapper">
+        <table id="transaction-list" aria-label="Transaction list">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Date</th>
+              <th scope="col">Category</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="transaction-list-body">
+            <!-- Rows injected by RenderModule.renderTransactionList -->
+            <tr class="placeholder-row" id="no-transactions-placeholder">
+              <td colspan="5">No transactions yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== MONTHLY SUMMARY ===================== -->
+    <section id="monthly-summary" aria-labelledby="monthly-summary-heading">
+      <h2 id="monthly-summary-heading">Monthly Summary</h2>
+
+      <!-- Month selector -->
+      <div class="form-field form-field--inline">
+        <label for="month-selector">Month:</label>
+        <select id="month-selector" name="selectedMonth">
+          <!-- Options injected by RenderModule.renderMonthSelector -->
+        </select>
+      </div>
+
+      <!-- Total spend -->
+      <div id="summary-total" class="summary-total">
+        <span class="summary-total__label">Total Spent:</span>
+        <span id="summary-total-value" class="summary-total__value">$0.00</span>
+      </div>
+
+      <!-- Per-category breakdown -->
+      <div id="summary-breakdown" aria-label="Per-category spending breakdown">
+        <!-- Category rows injected by RenderModule.renderMonthlySummary -->
+        <p id="no-summary-data" class="no-data-message">No data for this period.</p>
+      </div>
+
+      <!-- Canvas pie chart -->
+      <div class="chart-container">
+        <canvas
+          id="chart"
+          width="400"
+          height="400"
+          aria-label="Spending distribution chart"
+          role="img"
+        >
+          <!-- Fallback for browsers without canvas support -->
+          Your browser does not support the HTML5 canvas element.
+        </canvas>
+      </div>
+    </section>
+
+    <!-- ===================== CATEGORY MANAGER ===================== -->
+    <section id="category-manager" aria-labelledby="category-manager-heading">
+      <h2 id="category-manager-heading">Categories</h2>
+
+      <!-- Add category form -->
+      <form id="add-category-form" novalidate>
+        <div class="form-field form-field--inline">
+          <label for="new-category-name">New Category</label>
+          <input
+            type="text"
+            id="new-category-name"
+            name="categoryName"
+            placeholder="e.g. Gym, Subscriptions"
+            maxlength="50"
+            autocomplete="off"
+          />
+          <button type="submit" class="btn btn--secondary">Add</button>
+        </div>
+        <span id="new-category-error" class="field-error" role="alert" aria-live="assertive"></span>
+      </form>
+
+      <!-- Category list -->
+      <ul id="category-list" aria-label="Category list">
+        <!-- Items injected by RenderModule.renderCategorySelector / category render -->
+      </ul>
+    </section>
+
+    <!-- ===================== BUDGET LIMITS ===================== -->
+    <section id="budget-limits" aria-labelledby="budget-limits-heading">
+      <h2 id="budget-limits-heading">Budget Limits</h2>
+      <p class="section-description">Set a monthly spending limit per category. You'll be warned when you reach or exceed the limit.</p>
+
+      <div id="budget-limit-inputs">
+        <!-- Budget inputs injected by RenderModule.renderBudgetLimitInputs -->
+      </div>
+    </section>
+
+  </main>
+
+  <footer id="app-footer">
+    <p class="footer-text">Data is stored locally in your browser. No data is sent to any server.</p>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>

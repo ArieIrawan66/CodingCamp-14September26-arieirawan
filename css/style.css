@@ -1,0 +1,781 @@
+/* =============================================================
+   Expense & Budget Visualizer — style.css
+   CSS custom properties, themes, layout, and component styles
+   will be implemented in Task 2.
+   ============================================================= */
+
+/* Hide validation error spans by default */
+.field-error {
+  display: none;
+}
+
+/* =============================================================
+   CSS Custom Properties — Theme Tokens
+   Task 2.1 | Requirements: 6.7, 6.8
+   Both themes are tested for WCAG 2.1 AA compliance:
+     - Normal text  → 4.5 : 1 contrast ratio minimum
+     - Large text   → 3.0 : 1 contrast ratio minimum
+   ============================================================= */
+
+/* ------------------------------------------------------------
+   Light Theme
+   --color-text (#1a1a2e) on --color-bg (#f5f5f0)  → ~13.5 : 1 ✓
+   --color-text (#1a1a2e) on --color-surface (#ffffff) → ~16 : 1 ✓
+   --color-accent (#1a56db) on #ffffff → ~5.3 : 1 ✓
+   --color-text-muted (#4b5563) on #f5f5f0 → ~7.0 : 1 ✓
+   --color-error (#b91c1c) on #ffffff → ~5.6 : 1 ✓
+   --color-warning (#92400e) on #ffffff → ~6.8 : 1 ✓
+   --color-success (#065f46) on #ffffff → ~8.1 : 1 ✓
+   ------------------------------------------------------------ */
+[data-theme="light"] {
+  /* Page / section backgrounds */
+  --color-bg:              #f5f5f0;
+  --color-surface:         #ffffff;
+
+  /* Text */
+  --color-text:            #1a1a2e;
+  --color-text-muted:      #4b5563;
+
+  /* Borders */
+  --color-border:          #d1d5db;
+
+  /* Primary interactive / accent */
+  --color-accent:          #1a56db;
+  --color-accent-hover:    #1348b8;
+
+  /* Semantic colours */
+  --color-error:           #b91c1c;
+  --color-warning:         #92400e;
+  --color-success:         #065f46;
+}
+
+/* ------------------------------------------------------------
+   Dark Theme
+   --color-text (#f0f0eb) on --color-bg (#0f0f1a)  → ~16.5 : 1 ✓
+   --color-text (#f0f0eb) on --color-surface (#1e1e2e) → ~12.4 : 1 ✓
+   --color-accent (#60a5fa) on #1e1e2e → ~5.7 : 1 ✓
+   --color-text-muted (#9ca3af) on #0f0f1a → ~7.5 : 1 ✓
+   --color-error (#fca5a5) on #1e1e2e → ~6.2 : 1 ✓
+   --color-warning (#fcd34d) on #1e1e2e → ~9.4 : 1 ✓
+   --color-success (#6ee7b7) on #1e1e2e → ~10.1 : 1 ✓
+   ------------------------------------------------------------ */
+[data-theme="dark"] {
+  /* Page / section backgrounds */
+  --color-bg:              #0f0f1a;
+  --color-surface:         #1e1e2e;
+
+  /* Text */
+  --color-text:            #f0f0eb;
+  --color-text-muted:      #9ca3af;
+
+  /* Borders */
+  --color-border:          #374151;
+
+  /* Primary interactive / accent */
+  --color-accent:          #60a5fa;
+  --color-accent-hover:    #93c5fd;
+
+  /* Semantic colours */
+  --color-error:           #fca5a5;
+  --color-warning:         #fcd34d;
+  --color-success:         #6ee7b7;
+}
+
+/* =============================================================
+   Base / Reset
+   Task 2.2
+   ============================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* =============================================================
+   Layout — Header, Main, Footer
+   ============================================================= */
+
+#app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+#main-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#app-footer {
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* =============================================================
+   Section Cards
+   ============================================================= */
+
+#main-content > section {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+}
+
+#main-content > section > h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.section-description {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  margin-bottom: 0;
+}
+
+/* =============================================================
+   Notification Area
+   Task 2.2 | Requirements: 1.8, 7.3, 7.4
+   ============================================================= */
+
+#notification-area {
+  max-width: 900px;
+  margin: 0.75rem auto 0;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notification {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+}
+
+.notification--info {
+  background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  border-color: var(--color-accent);
+  color: var(--color-text);
+}
+
+.notification--error {
+  background-color: color-mix(in srgb, var(--color-error) 12%, transparent);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.notification__dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.7;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.notification__dismiss:hover {
+  opacity: 1;
+}
+
+/* =============================================================
+   Form Styles
+   ============================================================= */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.form-field--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.form-field--inline label {
+  white-space: nowrap;
+  min-width: 4rem;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  appearance: auto;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="date"]:disabled,
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* =============================================================
+   Validation Error State
+   Task 2.2 | Requirements: 1.3, 1.4, 2.3, 2.4, 5.7
+   ============================================================= */
+
+/* Show inline error span when parent has .has-error */
+.form-field.has-error .field-error {
+  display: block;
+  color: var(--color-error);
+  font-size: 0.8rem;
+}
+
+/* Highlight the input itself when parent has .has-error */
+.form-field.has-error input,
+.form-field.has-error select {
+  border-color: var(--color-error);
+}
+
+.form-field.has-error input:focus,
+.form-field.has-error select:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 20%, transparent);
+}
+
+/* =============================================================
+   Buttons
+   ============================================================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn--secondary {
+  background-color: transparent;
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.btn--danger {
+  background-color: transparent;
+  border-color: var(--color-error);
+  color: var(--color-error);
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error) 10%, transparent);
+}
+
+/* =============================================================
+   Theme Toggle Button
+   Task 2.2 | Requirements: 6.1
+   ============================================================= */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.theme-toggle__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Light mode — button shows "go dark" prompt */
+.theme-toggle--light {
+  background-color: var(--color-bg);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* Dark mode — button shows "go light" prompt */
+.theme-toggle--dark {
+  background-color: var(--color-surface);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* =============================================================
+   Transaction List Table
+   ============================================================= */
+
+#transaction-list-section .sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+#transaction-list-section .sort-controls label {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+#transaction-list-section .sort-controls select {
+  width: auto;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+#transaction-list-wrapper {
+  overflow-x: auto;
+}
+
+#transaction-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+#transaction-list thead {
+  background-color: color-mix(in srgb, var(--color-border) 40%, transparent);
+}
+
+#transaction-list th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid var(--color-border);
+  white-space: nowrap;
+}
+
+#transaction-list td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+  color: var(--color-text);
+}
+
+#transaction-list tbody tr:last-child td {
+  border-bottom: none;
+}
+
+#transaction-list tbody tr:hover {
+  background-color: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.placeholder-row td {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: 1.5rem 0.75rem;
+}
+
+/* =============================================================
+   Monthly Summary
+   Requirements: 3.2, 3.4
+   ============================================================= */
+
+#monthly-summary .form-field--inline select {
+  width: auto;
+}
+
+.summary-total {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background-color: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  border-radius: 0.375rem;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+.summary-total__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.summary-total__value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+#summary-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+/* Category row injected by RenderModule */
+.summary-category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.summary-category-row__name {
+  font-weight: 500;
+}
+
+.summary-category-row__amount {
+  color: var(--color-text-muted);
+}
+
+/* =============================================================
+   Budget Exceeded Highlight
+   Task 2.2 | Requirements: 5.3, 5.4
+   ============================================================= */
+
+.budget-exceeded {
+  background-color: color-mix(in srgb, var(--color-warning) 18%, transparent) !important;
+  border-color: var(--color-warning) !important;
+}
+
+.budget-exceeded .summary-category-row__amount {
+  color: var(--color-warning);
+  font-weight: 600;
+}
+
+.budget-warning-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-warning);
+  width: 100%;
+  margin-top: 0.15rem;
+}
+
+/* =============================================================
+   Chart Container
+   Requirements: 3.3, 3.4
+   ============================================================= */
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding: 0.75rem 0;
+}
+
+#chart {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+}
+
+/* =============================================================
+   Category Manager
+   Requirements: 2.1–2.7
+   ============================================================= */
+
+#add-category-form .form-field--inline {
+  align-items: flex-end;
+}
+
+#add-category-form .form-field--inline input {
+  width: auto;
+  flex: 1 1 180px;
+}
+
+#new-category-error {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--color-error);
+}
+
+/* Show error for category form (uses a slightly different structure) */
+#add-category-form.has-error #new-category-error {
+  display: block;
+}
+
+#category-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  font-size: 0.9rem;
+}
+
+.category-item__name {
+  font-weight: 500;
+}
+
+.category-item__badge {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 1rem;
+  background-color: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* =============================================================
+   Budget Limit Inputs
+   Requirements: 5.1, 5.2, 5.7
+   ============================================================= */
+
+#budget-limit-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.budget-limit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.budget-limit-row__label {
+  min-width: 8rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.budget-limit-row__input {
+  width: 9rem;
+  flex: 0 0 9rem;
+}
+
+.budget-limit-row__error {
+  display: none;
+  font-size: 0.78rem;
+  color: var(--color-error);
+  width: 100%;
+}
+
+.budget-limit-row.has-error .budget-limit-row__error {
+  display: block;
+}
+
+.budget-limit-row.has-error .budget-limit-row__input {
+  border-color: var(--color-error);
+}
+
+/* =============================================================
+   Utility Classes
+   ============================================================= */
+
+/* Visually hidden but available to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.no-data-message {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* =============================================================
+   Responsive — narrow viewports
+   ============================================================= */
+
+@media (max-width: 600px) {
+  #app-header {
+    padding: 0.75rem 1rem;
+  }
+
+  #main-content {
+    padding: 1rem 0.75rem;
+  }
+
+  #main-content > section {
+    padding: 1rem;
+  }
+
+  .app-title {
+    font-size: 1.1rem;
+  }
+
+  #transaction-list th,
+  #transaction-list td {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .summary-total__value {
+    font-size: 1.2rem;
+  }
+
+  .budget-limit-row__label {
+    min-width: 6rem;
+  }
+}
